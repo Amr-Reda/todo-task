@@ -1,56 +1,64 @@
-const Item = require('./model');
+const { validate } = require("jsonschema");
+
+const Item = require("./model");
+const { createItemShema, updateItemShema } = require("./schema");
 const { PAGE_LIMIT } = require("../../../config");
 
 const createItem = async (req, res) => {
-	try {
+    try {
+        const validationResult = validate(req.body, createItemShema);
+        if (!validationResult.valid) {
+            return res.status(400).json({ success: false, message: validationResult.errors[0].message });
+        }
 
-	} catch (error) {
-		return res
-			.status(500)
-			.json({
-				message: error.message,
-			});
-	}
+        const item = await Item.create({
+			userId: req.user._id,
+			...req.body
+		});
+        return res.status(201).json({
+			success: true,
+            message: "Item created successfully",
+            data: { item }
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 const getItemByID = async (req, res) => {
-	const { id } = req.params;
-	try {
-		
-	} catch (error) {
-		return res
-			.status(500)
-			.json({ message: error.message });
-	}
+    const { id } = req.params;
+    try {
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
 };
 
 const updateItem = async (req, res) => {
-	try {
-		
-	} catch (error) {
-		return res
-			.status(500)
-			.json({
-				message: error.message,
-			});
-	}
+    try {
+    } catch (error) {
+        return res.status(500).json({
+			success: false,
+            message: error.message
+        });
+    }
 };
 
 const deleteItem = async (req, res) => {
-	try {
-		
-	} catch (error) {
-		return res
-			.status(500)
-			.json({
-				message: error.message,
-			});
-	}
+    try {
+    } catch (error) {
+        return res.status(500).json({
+			success: false,
+            message: error.message
+        });
+    }
 };
 
 module.exports = {
-	createItem,
-	getItemByID,
-	updateItem,
-	deleteItem,
-}
+    createItem,
+    getItemByID,
+    updateItem,
+    deleteItem
+};
