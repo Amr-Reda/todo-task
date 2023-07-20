@@ -12,11 +12,11 @@ const createItem = async (req, res) => {
         }
 
         const item = await Item.create({
-			userId: req.user._id,
-			...req.body
-		});
+            userId: req.user._id,
+            ...req.body
+        });
         return res.status(201).json({
-			success: true,
+            success: true,
             message: "Item created successfully",
             data: { item }
         });
@@ -31,6 +31,11 @@ const createItem = async (req, res) => {
 const getItemByID = async (req, res) => {
     const { id } = req.params;
     try {
+        const item = await Item.findById(id);
+        if (!item) {
+            return res.status(404).json({ success: false, message: "Item not found" });
+        }
+        return res.status(200).json({ message: "Item loaded successfully", success: true, data: item });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
@@ -40,7 +45,7 @@ const updateItem = async (req, res) => {
     try {
     } catch (error) {
         return res.status(500).json({
-			success: false,
+            success: false,
             message: error.message
         });
     }
@@ -50,7 +55,7 @@ const deleteItem = async (req, res) => {
     try {
     } catch (error) {
         return res.status(500).json({
-			success: false,
+            success: false,
             message: error.message
         });
     }
