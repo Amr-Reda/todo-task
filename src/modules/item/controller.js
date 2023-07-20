@@ -28,6 +28,27 @@ const createItem = async (req, res) => {
     }
 };
 
+const getAllItems = async (req, res) => {
+    try {
+        const page = req.query.page ? req.query.page : 1;
+        delete req.query.page;
+
+        let totalCount = 0;
+        //pagination params
+        const options = {
+            skip: PAGE_LIMIT * page - PAGE_LIMIT,
+            limit: PAGE_LIMIT
+        };
+        const items = await Item.find(req.query)
+            .skip(options.skip)
+            .limit(options.limit);
+        totalCount = await Item.count(req.query);
+        return res.status(200).json({ message: "Items loaded successfully", success: true, totalCount, data: items });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 const getItemByID = async (req, res) => {
     const { id } = req.params;
     try {
@@ -102,6 +123,7 @@ const deleteItem = async (req, res) => {
 
 module.exports = {
     createItem,
+    getAllItems,
     getItemByID,
     updateItem,
     deleteItem

@@ -5,6 +5,7 @@ const router = express.Router();
 
 const { 
     createItem,
+    getAllItems,
     getItemByID,
     updateItem,
     deleteItem,
@@ -14,6 +15,12 @@ router.post(
     '/', 
     isAuthorized(),
     createItem
+);
+
+router.get(
+    '/', 
+    isAuthorized(),
+    getAllItems
 );
 
 router.get(
