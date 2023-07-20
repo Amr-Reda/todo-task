@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const initSeed = require('./seed');
 
 /**
  * @function
@@ -21,10 +22,5 @@ const connectDB = async () => {
 	//DB seeder
 	await initSeed()
 };
-
-const initSeed = async () => {
-    
-    return
-}
 
 module.exports = connectDB;

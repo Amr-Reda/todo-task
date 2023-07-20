@@ -13,7 +13,6 @@ const ItemSchema = new Schema(
 		},
 		description: {
 			type: String,
-			required: false
 		},
 		completed: {
 			type: Boolean,

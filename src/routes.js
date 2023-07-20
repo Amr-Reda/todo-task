@@ -1,5 +1,6 @@
 // Route files
 const itemRoutes = require('./modules/item');
+const userRoutes = require('./modules/user');
 
 /**
  * @function
@@ -9,4 +10,5 @@ const itemRoutes = require('./modules/item');
  */
 module.exports = (app) => {
     app.use('/items', itemRoutes);
+    app.use('/users', userRoutes);
 };
