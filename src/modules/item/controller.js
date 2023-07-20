@@ -43,30 +43,35 @@ const getItemByID = async (req, res) => {
 
 const updateItem = async (req, res) => {
     try {
-        const { params: { id }, body: updatePayload } = req;
+        const {
+            params: { id },
+            body: updatePayload
+        } = req;
 
         const validationResult = validate(req.body, updateItemShema);
         if (!validationResult.valid) {
             return res.status(400).json({ success: false, message: validationResult.errors[0].message });
         }
 
-        const item = await Item.findOneAndUpdate({
-            userId: req.user._id,
-            _id: id
-        }, updatePayload, {
-			new: true,
-			runValidators: true,
-		});
+        const item = await Item.findOneAndUpdate(
+            {
+                userId: req.user._id,
+                _id: id
+            },
+            updatePayload,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
 
-		if (!item) return res.status(404).json({ success: false, message: 'Item not found' });
-        
-		return res
-			.status(200)
-			.json({
-				message: 'Item updated successfully',
-                success: true,
-				data: {item},
-			});
+        if (!item) return res.status(404).json({ success: false, message: "Item not found" });
+
+        return res.status(200).json({
+            message: "Item updated successfully",
+            success: true,
+            data: { item }
+        });
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -77,6 +82,16 @@ const updateItem = async (req, res) => {
 
 const deleteItem = async (req, res) => {
     try {
+        const { id } = req.params;
+
+        const isDeleted = await Item.findOneAndDelete({
+            userId: req.user._id,
+            _id: id
+        });
+        if (isDeleted) {
+            return res.status(200).json({ success: true, message: "Item deleted successfully" });
+        }
+        return res.status(404).json({ success: false, message: "Item not found" });
     } catch (error) {
         return res.status(500).json({
             success: false,
